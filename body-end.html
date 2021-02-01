@@ -1,0 +1,242 @@
+<!-- HTML 5.2 allows for styles definitions inside of the body, a more
+    conservative approach is to put the styles in the head-end.html
+    file -->
+<style>
+.buttonMenu {
+	position: absolute;
+	bottom: 30px;
+	left: 30px;
+	width: 100px;
+}
+.TourChoiceMenu {
+	margin-bottom: 2px;
+}
+.tourButton, .tourButtonNext, .tourButtonPrevious, .TourChoiceMenu {
+	width: 100px;
+	padding: 10px;
+	z-index: 15;
+	padding: 10px 20px;
+	font-size: 20px;
+	background-color: rgba(0, 0, 0, 0.2);
+	color: white;
+	transition: 0.3s all;
+	border-radius: 4px;
+	border: 1px solid #eee;
+}
+.tourButtonPrevious {
+	width: 150px;
+}
+.tourButton:hover, .tourButtonNext:hover, .tourButtonPrevious:hover, .TourChoiceMenu:hover, .ReturnChoice:hover {
+	background-color: #bebebe;
+	cursor: pointer;
+}
+.tourHolder {
+	display: inline-block;
+	width: 300px;
+}
+.tourTitle {
+	display; inline-block;
+}
+.disabled {
+	display: none;
+}
+
+.videoHolder {
+	position: absolute;
+	left: 10px;
+    top: 10px;
+	width: 500px;
+	z-index: 104;
+}
+
+.videoOne {
+	display: inline-block;
+    position: absolute;
+    z-index: 104;
+}
+
+.closeVideo {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 105;
+	width: 20px;
+	height: 20px;
+	padding:2px 5px;
+	background-color: rgba(0, 0, 0, 0.2);
+	color: white;
+	transition: 0.3s all;
+	border-radius: 4px;
+	border: 1px solid #eee;
+	cursor: pointer;
+}
+
+.ReturnChoice {
+	width: 20px;
+	z-index: 15;
+	padding: 10px 20px 10px 10px;
+	font-size: 20px;
+	background-color: rgba(0, 0, 0, 0.2);
+	color: white;
+	transition: 0.3s all;
+	border-radius: 4px;
+	border: 1px solid #eee;
+}
+
+</style>
+<div id="VideoHolder" class="disabled videoHolder">
+	<button class="closeVideo" onclick="CloseVideo();"><span class="closeVideoButton">X</span></button>
+	<iframe id="VideoOne" class="disabled" width="500" height="300">
+	</iframe>
+</div>
+<div id="ChoiceMenu" class="buttonMenu" style="display: block;">
+	<button onclick="ShowTourOne()" class="TourChoiceMenu">Tour 1</button>
+	<button onclick="ShowTourTwo()" class="TourChoiceMenu">Tour 2</button>
+</div>
+<div id="TourHolderOne" style="display: none;" class="buttonMenu">
+	<div class="tourHolder">
+		<h4 class="tourTitle"><button class="ReturnChoice" onclick="StopTourOne()"><</button><span style="padding: 0px 10px;">Tour 1</span></h4>
+		<button id="previous" class="tourButtonPrevious" onclick="PreviousTourOne();">Previous</button>
+		<button id="next" class="tourButtonNext" onclick="NextTourOne();">Next</button>
+	</div>
+</div>
+<div id="TourHolderTwo" style="display: none;" class="buttonMenu">
+	<div class="tourHolder">
+		<h4 class="tourTitle"><button class="ReturnChoice" onclick="StopTourTwo()"><</button><span style="padding: 0px 10px;">Tour 2</span></h4>
+		<button id="previous" class="tourButtonPrevious" onclick="PreviousTourTwo();">Previous</button>
+		<button id="next" class="tourButtonNext" onclick="NextTourTwo();">Next</button>
+	</div>
+</div>
+<script>
+	var viewer = WALK.getViewer();
+	// Alles Tour 1
+	var TourOne = ['Floorplan','Registratie','Anhydritec','Bostik','Coba','Woodstock','Gilde Software','Imbema smt','Bar','Weber Beamix','Michel Oprey & Beisterveld','Wuthrich','Nieuwenhuis.nl'];
+	var TourOneCounter = 0;
+	
+	var btnTourOnePrevious = document.getElementById("previous");
+	var btnTourOneNext = document.getElementById("next");
+	// Alles Tour 2
+	var TourTwo = ['Floorplan','Registratie','Astrimex','Bremat','Tri-al','Ecocem','Gyproc','Knauf','Bar','Schoonewil','MC','Moeller','Omnicol'];
+	var TourTwoCounter = 0;
+	
+	var btnTourTwoPrevious = document.getElementById("previous");
+	var btnTourTwoNext = document.getElementById("next");
+	
+	// TourOne
+	function NextTourOne() {
+		if(TourOneCounter == 12){
+			btnTourOneNext.classList.add("disabled");
+			alert('eind tour u kunt zelf gaan rond kijken op de beurs');
+		} else {
+			btnTourOnePrevious.classList.remove("disabled");
+			TourOneCounter++
+			//autoplay intro video
+			var VideoOne = document.getElementById("VideoOne");
+			var VideoHolder = document.getElementById("VideoHolder");
+			VideoHolder.classList.remove("disabled");
+			VideoHolder.classList.add("videoHolder");
+			VideoOne.classList.remove("disabled");
+			VideoOne.classList.add("videoOne");
+			VideoOne.setAttribute("src", "https://www.youtube.com/embed/fCFendvNP1E" + "?autoplay=1");
+			
+			var CameraPoint = TourOne[TourOneCounter];
+			viewer.switchToView(CameraPoint);
+		}
+	};
+	function PreviousTourOne() {
+		if(TourOneCounter == 0){
+			btnTourOnePrevious.classList.add("disabled");
+		} else {
+			btnTourOneNext.classList.remove("disabled");
+			TourOneCounter--
+			//autoplay intro video
+			var VideoOne = document.getElementById("VideoOne");
+			var VideoHolder = document.getElementById("VideoHolder");
+			VideoHolder.classList.remove("disabled");
+			VideoHolder.classList.add("videoHolder");
+			VideoOne.classList.remove("disabled");
+			VideoOne.classList.add("videoOne");
+			VideoOne.setAttribute("src", "https://www.youtube.com/embed/fCFendvNP1E" + "?autoplay=1");
+			
+			var CameraPoint = TourOne[TourOneCounter];
+			viewer.switchToView(CameraPoint);
+		}
+	};
+	// TourTwo
+	function NextTourTwo() {
+		if(TourTwoCounter == 12){
+			btnTourTwoNext.classList.add("disabled");
+			alert('eind tour u kunt zelf gaan rond kijken op de beurs');
+		} else {
+			btnTourTwoPrevious.classList.remove("disabled");
+			TourTwoCounter++
+			var CameraPoint = TourTwo[TourTwoCounter];
+			viewer.switchToView(CameraPoint);
+		}
+	};
+	function PreviousTourTwo() {
+		if(TourTwoCounter == 0){
+			btnTourTwoPrevious.classList.add("disabled");
+		} else {
+			btnTourTwoNext.classList.remove("disabled");
+			TourTwoCounter--
+			var CameraPoint = TourTwo[TourTwoCounter];
+			viewer.switchToView(CameraPoint);
+		}
+	};
+	function CloseVideo() {
+		var VideoOne = document.getElementById("VideoOne");
+		var VideoHolder = document.getElementById("VideoHolder");
+		VideoHolder.classList.add("disabled");
+		VideoHolder.classList.remove("videoHolder");
+		VideoOne.setAttribute("src", "");
+		VideoOne.classList.add("disabled");
+		VideoOne.classList.remove("videoOne");
+	}
+	function ShowTourOne() {
+		var TourMenu = document.getElementById("TourHolderOne");
+		var ChoiceMenu = document.getElementById("ChoiceMenu");
+		if (TourMenu.style.display === "none") {
+			TourMenu.style.display = "block";
+			ChoiceMenu.style.display = "none";
+		} else {
+			TourMenu.style.display = "none";
+			ChoiceMenu.style.display = "block";
+		}
+	}
+	function ShowTourTwo() {
+		var TourMenu = document.getElementById("TourHolderTwo");
+		var ChoiceMenu = document.getElementById("ChoiceMenu");
+		if (TourMenu.style.display === "none") {
+			TourMenu.style.display = "block";
+			ChoiceMenu.style.display = "none";
+		} else {
+			TourMenu.style.display = "none";
+			ChoiceMenu.style.display = "block";
+		}
+	}
+	function StopTourOne() {
+		var TourMenu = document.getElementById("TourHolderOne");
+		var ChoiceMenu = document.getElementById("ChoiceMenu");
+		if (ChoiceMenu.style.display === "none") {
+			TourMenu.style.display = "none";
+			ChoiceMenu.style.display = "block";
+			CloseVideo();
+		} else {
+			TourMenu.style.display = "block";
+			ChoiceMenu.style.display = "none";
+		}
+	}
+	function StopTourTwo() {
+		var TourMenu = document.getElementById("TourHolderTwo");
+		var ChoiceMenu = document.getElementById("ChoiceMenu");
+		if (ChoiceMenu.style.display === "none") {
+			TourMenu.style.display = "none";
+			ChoiceMenu.style.display = "block";
+			CloseVideo();
+		} else {
+			TourMenu.style.display = "block";
+			ChoiceMenu.style.display = "none";
+		}
+	}
+</script>
